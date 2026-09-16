@@ -38,7 +38,14 @@ class BaseScreen(ABC):
         """Utility function to get an email address"""
 
         # https://stackoverflow.com/a/201378
-        mail_rgxp = r"""(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])"""
+        mail_rgxp = (
+            r"""(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"""
+            r""""(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|"""
+            r"""\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-"""
+            r"""z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|"""
+            r"""1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|"""
+            r"""\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])"""
+        )
         message = "Please provide a valid email address!"
         return self.input_regexp(mail_rgxp, message, **kwargs)
 
@@ -68,6 +75,30 @@ class BaseScreen(ABC):
                 return value
             except ValueError:
                 print("Please provide a valid date (dd-mm-yyyy)!")
+
+    def input_date(self, **kwargs):
+        """Utility function to get a date string, with no restriction on
+        past/future (unlike input_birthday) - used for tournament dates,
+        which can be upcoming.
+        """
+        while True:
+            value = self.input_string(**kwargs)
+            try:
+                datetime.strptime(value, "%d-%m-%Y")
+                return value
+            except ValueError:
+                print("Please provide a valid date (dd-mm-yyyy)!")
+
+    def input_int(self, min_value=None, **kwargs):
+        """Utility function to get a whole number, optionally with a
+        minimum value.
+        """
+        while True:
+            value = self.input_string(**kwargs)
+            if value.isdigit() and (min_value is None or int(value) >= min_value):
+                return int(value)
+
+            print("Please provide a valid number!")
 
     def run(self):
         """Main method to 'run' the screen - displays a message and gets a command"""

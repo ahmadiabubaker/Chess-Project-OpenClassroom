@@ -1,0 +1,3 @@
+faker
+flake8
+flake8-html

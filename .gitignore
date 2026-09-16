@@ -128,3 +128,14 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Project-specific: client-provided spec doc, not meant for the public repo
+PreApp_P3_Technical+Specification.pdf
+
+# OS cruft
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.idea/
