@@ -15,6 +15,9 @@ class TournamentManager:
                 try:
                     self.tournaments.append(Tournament(filepath))
                 except (json.JSONDecodeError, KeyError, TypeError) as exc:
+                    # Malformed JSON, missing fields, or the wrong shape
+                    # entirely (e.g. an old-format sample file) - skip it
+                    # instead of crashing the whole app on startup.
                     print(filepath, "could not be loaded:", exc)
 
     def create(self, name, venue, date_start, date_end, number_of_rounds):

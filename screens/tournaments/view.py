@@ -1,4 +1,4 @@
-from commands import NoopCmd, TournamentListCmd
+from commands import NoopCmd, TournamentMainCmd
 from models import ClubManager
 from models.player_search import find_by_chess_id
 
@@ -31,18 +31,31 @@ class TournamentView(BaseScreen):
 
     def get_command(self):
         while True:
-            print("Type R to register a player, E to enter round results,")
-            print("A to advance to the next round, V to view the report.")
-            print("Type B to go back to the main menu.")
+            if self.tournament.completed:
+                print(f"{self.tournament.name} is complete!")
+                print("Type V to view the report, D to delete this tournament,")
+                print("or B to go back to the main menu.")
+            else:
+                print("Type R to register a player, E to enter round results,")
+                print("A to advance to the next round, V to view the report.")
+                print("Type D to delete this tournament, or B to go back to the main menu.")
+
             value = self.input_string().upper()
 
             if value == "B":
-                return TournamentListCmd()
+                return TournamentMainCmd()
+            elif value == "V":
+                return NoopCmd("tournament-report", tournament=self.tournament)
+            elif value == "D":
+                return NoopCmd("tournament-delete", tournament=self.tournament)
+            elif self.tournament.completed:
+                # R/E/A aren't offered once finished (see the printed menu
+                # above); ignore a stray keystroke instead of matching one
+                # of them by accident.
+                continue
             elif value == "R":
                 return NoopCmd("tournament-register", tournament=self.tournament)
             elif value == "E":
                 return NoopCmd("tournament-results", tournament=self.tournament)
             elif value == "A":
                 return NoopCmd("tournament-advance", tournament=self.tournament)
-            elif value == "V":
-                return NoopCmd("tournament-report", tournament=self.tournament)

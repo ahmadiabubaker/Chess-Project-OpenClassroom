@@ -24,6 +24,9 @@ class Round:
     def score_for(self, chess_id):
         """Returns the points a player earned in this round."""
 
+        # sum(), not "find their one match and return it": a player can be
+        # in zero matches this round (e.g. registered after this round was
+        # generated), and sum() of nothing is 0 - no extra check needed.
         return sum(
             match.score_for(chess_id)
             for match in self.matches

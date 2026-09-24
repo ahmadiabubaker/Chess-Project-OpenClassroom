@@ -1,6 +1,7 @@
 from commands import TournamentListCmd
 from screens.tournaments import (
     AdvanceRound,
+    DeleteTournament,
     EnterResults,
     PlayerRegister,
     TournamentCreate,
@@ -21,6 +22,7 @@ class App:
         "tournament-results": EnterResults,
         "tournament-advance": AdvanceRound,
         "tournament-report": TournamentReport,
+        "tournament-delete": DeleteTournament,
         "exit": False,
     }
 

@@ -92,6 +92,11 @@ class Tournament:
     def register_player(self, chess_id):
         """Registers a player (by chess_id) for this tournament."""
 
+        # The spec doesn't say either way - this is our own rule, matching
+        # how real Swiss tournaments close registration once round 1 starts.
+        if self.rounds:
+            raise RuntimeError(f"{self.name} has already started, no more players can be registered!")
+
         if chess_id in self.players:
             raise ValueError(f"{chess_id} is already registered for this tournament!")
 
@@ -122,6 +127,9 @@ class Tournament:
         if self.rounds and not self.rounds[-1].completed:
             raise RuntimeError("The current round is not finished yet!")
 
+        # Checked before generating a new round, not after: this means the
+        # round that just finished was the last one, so we close the
+        # tournament here instead of ever generating a round N+1.
         if self.rounds and len(self.rounds) == self.number_of_rounds:
             self.completed = True
             self.current_round = None
@@ -134,6 +142,11 @@ class Tournament:
         self.rounds.append(Round(round_number, matches))
         self.current_round = round_number
         self.save()
+
+    def delete(self):
+        """Permanently deletes this tournament's JSON file."""
+
+        self.filepath.unlink()
 
     def save(self):
         """Serializes the tournament and saves it to the JSON file."""

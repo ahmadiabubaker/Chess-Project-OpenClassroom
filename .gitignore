@@ -139,3 +139,7 @@ desktop.ini
 
 # IDE
 .idea/
+
+# Local test data, not part of the real project
+sample_data_backup/
+data/tournaments/JOe.json

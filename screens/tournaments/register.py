@@ -16,6 +16,12 @@ class PlayerRegister(BaseScreen):
         print("## Register a player -", self.tournament.name)
 
     def get_command(self):
+        # Mirrors the same rule Tournament.register_player() enforces, so
+        # the user gets a clear message here instead of a raised error.
+        if self.tournament.rounds:
+            print(f"{self.tournament.name} has already started - no new players can be registered.")
+            return NoopCmd("tournament-view", tournament=self.tournament)
+
         while True:
             print("Type L to list every player, I to search by chess ID,")
             print("N to search by name, or B to go back.")
