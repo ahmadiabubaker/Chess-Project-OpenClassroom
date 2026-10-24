@@ -1,6 +1,6 @@
 from commands import EnterResultsCmd, NoopCmd
 from models import ClubManager
-from models.player_search import find_by_chess_id
+from models.player_search import display_name
 
 from ..base_screen import BaseScreen
 
@@ -15,11 +15,6 @@ class EnterResults(BaseScreen):
 
     def display(self):
         print("## Enter results -", self.tournament.name)
-
-    def _name(self, chess_id):
-        """Display name for a chess_id, falling back to the id itself."""
-        player = find_by_chess_id(self.club_manager, chess_id)
-        return player.name if player else chess_id
 
     def get_command(self):
         # There is nothing to enter until the first round has been generated,
@@ -41,8 +36,8 @@ class EnterResults(BaseScreen):
         # is how EnterResultsCmd pairs them back up with zip()
         results = []
         for match in current_round.matches:
-            name1 = self._name(match.players[0])
-            name2 = self._name(match.players[1])
+            name1 = display_name(self.club_manager, match.players[0])
+            name2 = display_name(self.club_manager, match.players[1])
 
             print(f"{name1} vs {name2}")
             print(f"Type 1 if {name1} won, 2 if {name2} won, or T for a tie.")

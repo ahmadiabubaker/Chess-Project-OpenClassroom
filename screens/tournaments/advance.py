@@ -32,6 +32,10 @@ class AdvanceRound(BaseScreen):
         # than close the tournament), which needs an even number of
         # registered players.
         about_to_close = t.rounds and len(t.rounds) == t.number_of_rounds
+        if not about_to_close and len(t.players) < 2:
+            print("At least two players must be registered to start a round.")
+            return NoopCmd("tournament-view", tournament=t)
+
         if not about_to_close and len(t.players) % 2 != 0:
             print("An even number of players must be registered to start a round.")
             return NoopCmd("tournament-view", tournament=t)

@@ -1,17 +1,5 @@
 from models.club_manager import ClubManager
-from models.player_search import find_by_chess_id
-
-
-def _player_name(club_manager, chess_id):
-    """Looks up a player's display name from their chess_id, falling back
-    to the raw id if they can't be found in any club roster.
-    """
-
-    # The fallback matters: a tournament stores chess_ids, so a player who has
-    # since been removed from their club would otherwise break the report.
-    # Showing the bare id is less useful than a name, but it is still correct
-    player = find_by_chess_id(club_manager, chess_id)
-    return player.name if player else chess_id
+from models.player_search import display_name
 
 
 def build_report(tournament):
@@ -36,7 +24,7 @@ def build_report(tournament):
     # standings() has already sorted the players by points, so enumerate()
     # starting at 1 gives each of them their rank
     for rank, chess_id in enumerate(tournament.standings(), 1):
-        name = _player_name(club_manager, chess_id)
+        name = display_name(club_manager, chess_id)
         points = tournament.points_for(chess_id)
         lines.append(f"  {rank}. {name} ({chess_id}) - {points} pts")
 
@@ -51,8 +39,8 @@ def build_report(tournament):
     for round_ in tournament.rounds:
         lines.append(f"  Round {round_.number}")
         for match in round_.matches:
-            name1 = _player_name(club_manager, match.players[0])
-            name2 = _player_name(club_manager, match.players[1])
+            name1 = display_name(club_manager, match.players[0])
+            name2 = display_name(club_manager, match.players[1])
             score1, score2 = match.scores
 
             # An unplayed match also has equal scores (0-0), so it has to be

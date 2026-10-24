@@ -1,6 +1,6 @@
 from commands import NoopCmd, TournamentMainCmd
 from models import ClubManager
-from models.player_search import find_by_chess_id
+from models.player_search import display_name
 
 from ..base_screen import BaseScreen
 
@@ -30,10 +30,9 @@ class TournamentView(BaseScreen):
         # club files - one ClubManager for the whole list, not one per player
         club_manager = ClubManager()
         for idx, chess_id in enumerate(t.players, 1):
-            player = find_by_chess_id(club_manager, chess_id)
-            # Falls back to the id if the player is no longer in any club
-            label = player.name if player else chess_id
-            print(idx, label, f"({chess_id})")
+            # display_name falls back to the id if the player is no longer
+            # in any club
+            print(idx, display_name(club_manager, chess_id), f"({chess_id})")
 
     def get_command(self):
         while True:

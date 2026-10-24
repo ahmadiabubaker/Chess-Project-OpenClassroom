@@ -13,6 +13,11 @@ def generate_pairings(tournament):
     # Everybody must have an opponent. There is no "bye" in the rules we were
     # given, so an odd roster is refused here rather than silently leaving
     # somebody out. AdvanceRound checks this first so the user gets a message
+    # Nobody (or one person) registered would build a round with no matches,
+    # which can never be completed - and that locks registration for good
+    if len(tournament.players) < 2:
+        raise ValueError("At least two players are required to generate pairings!")
+
     if len(tournament.players) % 2 != 0:
         raise ValueError("An even number of players is required to generate pairings!")
 

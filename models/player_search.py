@@ -32,6 +32,19 @@ def find_by_chess_id(club_manager, chess_id):
     return None
 
 
+def display_name(club_manager, chess_id):
+    """Returns the name of the player with the given chess_id, falling back
+    to the raw id if they can't be found in any club roster.
+    """
+
+    # The fallback matters: a tournament stores chess_ids, so a player who has
+    # since been removed from their club would otherwise break the screen or
+    # the report. Showing the bare id is less useful than a name, but it is
+    # still correct
+    player = find_by_chess_id(club_manager, chess_id)
+    return player.name if player else chess_id
+
+
 def search_by_name(club_manager, query):
     """Returns every player whose name contains query, case-insensitively."""
 

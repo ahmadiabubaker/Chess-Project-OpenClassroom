@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from commands import TournamentCreateCmd
 
 from ..base_screen import BaseScreen
@@ -20,6 +22,11 @@ class TournamentCreate(BaseScreen):
         # so unlike a birthday a date in the future has to be allowed here
         date_start = self.input_date(prompt="Start date (dd-mm-yyyy)")
         date_end = self.input_date(prompt="End date (dd-mm-yyyy)")
+        # input_date only checks the format, so the order of the two dates is
+        # checked here - a tournament cannot finish before it starts
+        while datetime.strptime(date_end, "%d-%m-%Y") < datetime.strptime(date_start, "%d-%m-%Y"):
+            print("The end date cannot be before the start date!")
+            date_end = self.input_date(prompt="End date (dd-mm-yyyy)")
         # min_value=1 rules out a tournament with no rounds at all
         number_of_rounds = self.input_int(prompt="Number of rounds", min_value=1)
 

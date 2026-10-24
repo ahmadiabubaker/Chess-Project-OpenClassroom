@@ -28,7 +28,15 @@ class TournamentManager:
     def create(self, name, venue, date_start, date_end, number_of_rounds):
         # The file name is derived from the tournament name, the same way
         # ClubManager builds a club's file name
-        filepath = self.data_folder / (name.replace(" ", "") + ".json")
+        stem = name.replace(" ", "")
+        filepath = self.data_folder / (stem + ".json")
+        # A second tournament whose name produces the same file name would
+        # otherwise overwrite the first one's file, so the name is suffixed
+        # until a free one is found
+        suffix = 2
+        while filepath.exists():
+            filepath = self.data_folder / f"{stem}-{suffix}.json"
+            suffix += 1
         tournament = Tournament(
             filepath=filepath,
             name=name,
