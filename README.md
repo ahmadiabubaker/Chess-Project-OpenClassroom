@@ -86,7 +86,11 @@ The project is linted with `flake8` (`max-line-length=119`). To check the code a
 the HTML report under `flake8_report/`:
 
 ```
-python -m flake8 --max-line-length=119 --format=html --htmldir=flake8_report .
+python -m flake8 --max-line-length=119 --exclude=venv,flake8_report --format=html --htmldir=flake8_report .
 ```
 
 Open `flake8_report/index.html` in a browser to view it.
+
+The `--exclude` is needed so the check covers this project only: without it, flake8 also
+walks the `venv/` folder and reports thousands of violations from the installed
+third-party packages.
