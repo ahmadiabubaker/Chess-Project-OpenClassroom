@@ -19,9 +19,15 @@ class EnterResultsCmd(BaseCommand):
         rule true, since points are always computed from the matches
         directly rather than tracked separately.
         """
+        # Rounds are only ever appended, so the current one is always the last
         current_round = self.tournament.rounds[-1]
+        # zip() walks the matches and the collected results together, which is
+        # why the screen has to return them in the order it displayed them.
+        # Each tuple is unpacked straight into the arguments set_result takes
         for match, (winner, tie) in zip(current_round.matches, self.results):
             match.set_result(winner=winner, tie=tie)
 
+        # One save for the whole round. Each set_result() above has updated
+        # the objects in memory; this is the line that puts them on disk
         self.tournament.save()
         return Context("tournament-view", tournament=self.tournament)

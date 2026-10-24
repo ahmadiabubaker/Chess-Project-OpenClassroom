@@ -15,5 +15,9 @@ class TournamentMainCmd(BaseCommand):
     """
 
     def execute(self):
+        # Re-read from disk, so a tournament just created, completed or
+        # deleted is reflected in the list the user is sent back to
         tm = TournamentManager()
+        # Straight to the list screen with no in_progress() check: that check
+        # is exactly what would bounce the user back where they came from
         return Context("tournament-main", tournaments=tm.sorted_by_start_date())

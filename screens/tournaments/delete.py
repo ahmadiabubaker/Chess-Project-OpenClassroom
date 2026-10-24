@@ -13,9 +13,15 @@ class DeleteTournament(BaseScreen):
         print("## Delete tournament -", self.tournament.name)
 
     def get_command(self):
+        # A whole screen for one question, because deleting removes the JSON
+        # file outright - there is no undo and no copy kept anywhere.
+        # The name is repeated in the prompt so the user can see exactly
+        # which tournament they are about to lose
         print("This cannot be undone. Delete", self.tournament.name, "? (Y/N)")
         value = self.input_string().upper()
         if value == "Y":
             return TournamentDeleteCmd(self.tournament)
 
+        # Anything other than an explicit Y cancels and goes back untouched -
+        # for a destructive action, the safe answer has to be the default
         return NoopCmd("tournament-view", tournament=self.tournament)
