@@ -129,8 +129,11 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# Project-specific: client-provided spec doc, not meant for the public repo
-PreApp_P3_Technical+Specification.pdf
+# Project-specific: PDFs are working documents, not part of the deliverable code.
+# Covers the client-provided spec (PreApp_P3_Technical+Specification.pdf, including
+# browser-renamed copies like "... (1).pdf") and the delivery email
+# (delivery-email.pdf). No PDF in this project is meant to be tracked.
+*.pdf
 
 # OS cruft
 .DS_Store
